@@ -53,6 +53,20 @@
 		<footer class="modal-card-foot is-flex is-align-items-center">
 			<div class="is-flex-grow-1"></div>
 			<div>
+				<div class="is-flex-grow-1">
+					<!-- Toggle for Anonymous Share -->
+					<b-switch v-model="anonymousShare"></b-switch>
+					<div v-if="anonymousShare">
+							<optgroup v-for="user in users" :key="share.user" :label="share.user">
+								<option
+									:key="user"
+									:value="user"
+								>
+									{{ user }}
+								</option>
+							</optgroup>
+						</div>
+				</div>
 				<b-button :label="$t('Submit')" :loading="isSaving" rounded type="is-primary" @click="saveShares"/>
 			</div>
 		</footer>
@@ -65,6 +79,7 @@ export default {
 	data() {
 		return {
 			isSaving: false,
+			users: {},
 			rootDataList: [
 				{
 					name: 'Root',
@@ -123,13 +138,17 @@ export default {
 					selected: true,
 					extensions: null
 				},
-
 			],
 			dataList: [],
 		}
 	},
 	async created() {
 		this.getNewList()
+		try {
+			this.users = await this.$api.get("/samba/users/list")
+		} catch (error) {
+			console.error("Failed to fetch users:", error)
+		}
 	},
 	methods: {
 		/**
