@@ -57,7 +57,7 @@
 					<!-- Toggle for Anonymous Share -->
 					<b-switch v-model="anonymousShare"></b-switch>
 					<div v-if="anonymousShare">
-							<optgroup v-for="user in users" :key="share.user" :label="share.user">
+							<optgroup v-for="user in users" :key="share.users" :label="share.users">
 								<option
 									:key="user"
 									:value="user"
@@ -186,7 +186,8 @@ export default {
 			const data = selectedList.map(item => {
 				return {
 					path: item.path,
-					anonymous: true
+					anonymous: item.anonymousShare,
+					valid_users: item.share.users,
 				}
 			})
 			try {
